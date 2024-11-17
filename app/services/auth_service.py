@@ -23,7 +23,7 @@ def login_user(username, password):
     user = User.query.filter_by(username=username).first()
 
     if user and user.check_password(password):  
-        token = create_access_token(identity={"user_id": user.id, "username": user.username})
+        token = create_access_token(str(user.id))
         return {"access_token": token}, 200
 
     return {"message": "Invalid username or password"}, 401
