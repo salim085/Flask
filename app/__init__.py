@@ -1,20 +1,29 @@
+import secrets
 from flask import Flask
+from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+import os
+from dotenv import load_dotenv
 
 db = SQLAlchemy()
 migrate = Migrate()
-
+SECRET_KEY = secrets.token_hex(32)
+DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
+load_dotenv()
 def create_app():
+
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost/flask'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost:3306/flask'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SECRET_KEY'] = SECRET_KEY
+
+    jwt = JWTManager(app)
 
     db.init_app(app)
     migrate.init_app(app, db)
-
-    # Import and register blueprints for routes
-    from .routes import main
-    app.register_blueprint(main)
+    
+    from app.controllers.auth_controller import auth_bp
+    app.register_blueprint(auth_bp)
 
     return app
