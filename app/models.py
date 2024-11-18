@@ -41,9 +41,19 @@ class Property(db.Model):
     def __init__(self, name, description, property_type, city, owner_id):
         self.name = name
         self.description = description
-        self.property_type = property_type
+        self.type = property_type
         self.city = city
         self.owner_id = owner_id
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'type': self.type,
+            'city': self.city,
+            'owner_id': self.owner_id
+        }
 
 # Modèle Pièce 
 class Room(db.Model):

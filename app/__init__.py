@@ -26,8 +26,10 @@ def create_app():
     
     from app.controllers.user_controller import user_bp
     from app.controllers.auth_controller import auth_bp
+    from app.controllers.property_controller import property_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(user_bp)
+    app.register_blueprint(property_bp)
 
     return app
