@@ -26,8 +26,7 @@ class User(db.Model):
 
 # Modèle Propriété 
 class Property(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    adress = db.Column(db.String(100), nullable=False, primary_key=True)
     description = db.Column(db.String(500))
     type = db.Column(db.String(50), nullable=False)
     city = db.Column(db.String(50), nullable=False)
@@ -39,7 +38,7 @@ class Property(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __init__(self, name, description, property_type, city, owner_id):
-        self.name = name
+        self.adress = name
         self.description = description
         self.type = property_type
         self.city = city
@@ -47,22 +46,28 @@ class Property(db.Model):
 
     def to_dict(self):
         return {
-            'id': self.id,
-            'name': self.name,
+            'adress': self.adress,
             'description': self.description,
             'type': self.type,
             'city': self.city,
-            'owner_id': self.owner_id
+            'rooms': [ room.to_dict() for room in self.rooms]
         }
 
 # Modèle Pièce 
 class Room(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
     area = db.Column(db.Integer)  
-    property_id = db.Column(db.Integer, db.ForeignKey('property.id'), nullable=False)
-
-    def __init__(self, name, area, property_id):
+    property_adress= db.Column(db.String(100), db.ForeignKey('property.adress'), nullable=True)
+    name=db.Column(db.String(100), nullable=True)
+    def __init__(self, name, area, property_adress):
         self.name = name
         self.area = area
-        self.property_id = property_id
+        self.property_adress =property_adress
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'area': self.area,
+            'name': self.name
+        }
+
